@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=1111
+      - POSTGRES_DB=vk_rss_bot
+      - POSTGRES_USER=postgres
+    networks:
+      - vk_rss_bot
+    restart: always
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    container_name: postgres
+
+  api:
+    build: ./vk-rss-backend
+    command: uvicorn app.main:api --host 0.0.0.0
+    volumes:
+      - .:/api
+    ports:
+      - 8000:8000
+    expose:
+      - 8000
+    links:
+      - db
+    env_file:
+      - ./vk-rss-backend/.env
+    networks:
+      - vk_rss_bot
+    container_name: api
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  web:
+    build: ./vk-rss-frontend
+    ports:
+      - "80:80"
+    container_name: frontend
+    networks:
+      - vk_rss_bot
+    
+
+networks:
+  vk_rss_bot:
