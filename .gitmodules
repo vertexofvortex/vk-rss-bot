@@ -1,0 +1,6 @@
+[submodule "vk-rss-backend"]
+	path = vk-rss-backend
+	url = git@github.com:vertexofvortex/vk-rss-backend.git
+[submodule "vk-rss-frontend"]
+	path = vk-rss-frontend
+	url = git@github.com:vertexofvortex/vk-rss-frontend.git
